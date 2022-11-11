@@ -1,4 +1,5 @@
-﻿using System.Management.Automation;
+﻿using Amazon.Runtime;
+using System.Management.Automation;
 
 namespace AwsSigV4Cmdlet
 {
@@ -9,7 +10,7 @@ namespace AwsSigV4Cmdlet
         [Parameter(Mandatory = true, Position = 0)]
         public Uri Uri { get; set; }
 
-        [Parameter(Mandatory = false, Position = 1)] 
+        [Parameter(ValueFromPipeline = true)] 
         public string Body { get; set; }
 
         [Parameter()]
@@ -30,5 +31,26 @@ namespace AwsSigV4Cmdlet
 
         [Parameter()]
         public string Service { get; set; }
+
+        private HttpClient _client;
+
+        protected override void BeginProcessing()
+        {
+            base.BeginProcessing();
+            _client = new HttpClient();
+        }
+
+        protected override void ProcessRecord()
+        {
+            var credentials = new ImmutableCredentials(AccessKey, SecretKey, Token);
+            
+            if (Method == "GET")
+            {
+                var response = _client.GetAsync(Uri, HttpCompletionOption.ResponseContentRead, Region, Service, credentials).Result;
+                return;
+            }
+            throw new NotImplementedException("Give me half a chance");
+
+        }
     }
 }
