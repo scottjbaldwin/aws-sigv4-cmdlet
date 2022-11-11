@@ -11,16 +11,16 @@ namespace AwsSigV4Cmdlet
         public Uri Uri { get; set; }
 
         [Parameter(ValueFromPipeline = true)] 
-        public string Body { get; set; }
+        public string? Body { get; set; }
 
         [Parameter()]
-        public string AccessKey { get; set; }
+        public string? AccessKey { get; set; }
 
         [Parameter()]
-        public string SecretKey { get; set; }
+        public string? SecretKey { get; set; }
 
         [Parameter()]
-        public string Token { get; set; }
+        public string? Token { get; set; }
 
         [Parameter()]
         [ValidateSet("GET", "POST", "PUT", "DELETE")]
@@ -32,8 +32,27 @@ namespace AwsSigV4Cmdlet
         [Parameter()]
         public string Service { get; set; }
 
-        private HttpClient _client;
+        private HttpClient? _client;
 
+        public InvokeAwsSigV4WebRequest()
+        {
+            if (Uri == null)
+            {
+                throw new ArgumentNullException(nameof(Uri));
+            }
+            if (Region == null)
+            {
+                throw new ArgumentNullException(nameof(Region));
+            }
+            if (Method == null)
+            {
+                Method = "GET";
+            }
+            if (Service == null)
+            {
+                Service = "execute-api";
+            }
+        }
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
@@ -46,7 +65,7 @@ namespace AwsSigV4Cmdlet
             
             if (Method == "GET")
             {
-                var response = _client.GetAsync(Uri, HttpCompletionOption.ResponseContentRead, Region, Service, credentials).Result;
+                var response = _client?.GetAsync(Uri, HttpCompletionOption.ResponseContentRead, Region, Service, credentials).Result;
                 return;
             }
             throw new NotImplementedException("Give me half a chance");
