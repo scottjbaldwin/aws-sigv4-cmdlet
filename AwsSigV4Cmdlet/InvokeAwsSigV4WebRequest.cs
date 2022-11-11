@@ -1,26 +1,27 @@
 ﻿using Amazon.Runtime;
 using System.Management.Automation;
+using System.Net.Http.Headers;
 
 namespace AwsSigV4Cmdlet
 {
     [Cmdlet(VerbsLifecycle.Invoke, "AwsSigV4WebRequest")]
-    [OutputType(typeof(HttpResponseMessage))]
+    [OutputType(typeof(BasicAwsSigV4WebResponse))]
     public class InvokeAwsSigV4WebRequest : Cmdlet
     {
         [Parameter(Mandatory = true, Position = 0)]
         public Uri Uri { get; set; }
 
         [Parameter(ValueFromPipeline = true)] 
-        public string? Body { get; set; }
+        public string Body { get; set; }
 
         [Parameter()]
-        public string? AccessKey { get; set; }
+        public string AccessKey { get; set; }
 
         [Parameter()]
-        public string? SecretKey { get; set; }
+        public string SecretKey { get; set; }
 
         [Parameter()]
-        public string? Token { get; set; }
+        public string Token { get; set; }
 
         [Parameter()]
         [ValidateSet("GET", "POST", "PUT", "DELETE")]
@@ -34,25 +35,6 @@ namespace AwsSigV4Cmdlet
 
         private HttpClient? _client;
 
-        public InvokeAwsSigV4WebRequest()
-        {
-            if (Uri == null)
-            {
-                throw new ArgumentNullException(nameof(Uri));
-            }
-            if (Region == null)
-            {
-                throw new ArgumentNullException(nameof(Region));
-            }
-            if (Method == null)
-            {
-                Method = "GET";
-            }
-            if (Service == null)
-            {
-                Service = "execute-api";
-            }
-        }
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
@@ -66,6 +48,23 @@ namespace AwsSigV4Cmdlet
             if (Method == "GET")
             {
                 var response = _client?.GetAsync(Uri, HttpCompletionOption.ResponseContentRead, Region, Service, credentials).Result;
+
+                if (response != null)
+                {
+                    var raw = response.Content.ReadAsStringAsync().Result;
+                    var output = new BasicAwsSigV4WebResponse
+                    {
+                        RawContent = raw,
+                        Content = raw,
+                        StatusCode = (int)response.StatusCode,
+                        StatusCodeDescription = response.StatusCode.ToString(),
+                        Headers = response.Headers.ToDictionary(x => x.Key, x => string.Join(", ", x.Value)),
+                        RawContentLength = raw.Length
+                    };
+
+                    WriteObject(output);
+                    
+                }
                 return;
             }
             throw new NotImplementedException("Give me half a chance");
