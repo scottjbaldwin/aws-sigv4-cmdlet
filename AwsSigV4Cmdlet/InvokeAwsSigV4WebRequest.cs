@@ -59,7 +59,12 @@ namespace AwsSigV4Cmdlet
                 return;
             }
             throw new NotImplementedException("Give me half a chance");
+        }
 
+        protected override void EndProcessing()
+        {
+            _client?.Dispose();
+            base.EndProcessing();
         }
 
         private void HandlePost(ImmutableCredentials credentials)
