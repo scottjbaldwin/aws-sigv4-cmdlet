@@ -17,7 +17,7 @@ namespace AwsSigV4Cmdlet
 
         public string RawContent { get; set; } = string.Empty;
 
-        public Dictionary<string, string> Headers { get; set; }
+        public Dictionary<string, string>? Headers { get; set; }
 
         public int RawContentLength { get; set; }
     }

@@ -12,7 +12,7 @@ namespace AwsSigV4Cmdlet
         public Uri Uri { get; set; }
 
         [Parameter(ValueFromPipeline = true)] 
-        public string Body { get; set; }
+        public string? Body { get; set; }
 
         [Parameter()]
         public string AccessKey { get; set; }
@@ -21,7 +21,7 @@ namespace AwsSigV4Cmdlet
         public string SecretKey { get; set; }
 
         [Parameter()]
-        public string Token { get; set; }
+        public string? Token { get; set; }
 
         [Parameter()]
         [ValidateSet("GET", "POST", "PUT", "DELETE")]
@@ -34,7 +34,7 @@ namespace AwsSigV4Cmdlet
         public string Service { get; set; }
 
         [Parameter()]
-        public string ContentType { get; set; }
+        public string? ContentType { get; set; }
 
         private HttpClient? _client;
 
@@ -64,13 +64,13 @@ namespace AwsSigV4Cmdlet
 
         private void HandlePost(ImmutableCredentials credentials)
         {
-            HttpContent content = null;
+            HttpContent? content;
             switch (ContentType)
             {
                 case "application/json":
                 case "text/html":
                 case "text/plain":
-                    content = new StringContent(Body, System.Text.Encoding.UTF8, ContentType);
+                    content = new StringContent(Body ?? string.Empty, System.Text.Encoding.UTF8, ContentType);
                     break;
                 default:
                     throw new NotImplementedException(ContentType);
