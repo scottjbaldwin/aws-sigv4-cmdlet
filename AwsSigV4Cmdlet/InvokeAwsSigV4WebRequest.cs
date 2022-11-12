@@ -47,28 +47,38 @@ namespace AwsSigV4Cmdlet
             
             if (Method == "GET")
             {
-                var response = _client?.GetAsync(Uri, HttpCompletionOption.ResponseContentRead, Region, Service, credentials).Result;
-
-                if (response != null)
-                {
-                    var raw = response.Content.ReadAsStringAsync().Result;
-                    var output = new BasicAwsSigV4WebResponse
-                    {
-                        RawContent = raw,
-                        Content = raw,
-                        StatusCode = (int)response.StatusCode,
-                        StatusCodeDescription = response.StatusCode.ToString(),
-                        Headers = response.Headers.ToDictionary(x => x.Key, x => string.Join(", ", x.Value)),
-                        RawContentLength = raw.Length
-                    };
-
-                    WriteObject(output);
-                    
-                }
+                HandleGet(credentials);
                 return;
             }
             throw new NotImplementedException("Give me half a chance");
 
+        }
+
+        private void HandleGet(ImmutableCredentials credentials)
+        {
+            var response = _client?.GetAsync(Uri, HttpCompletionOption.ResponseContentRead, Region, Service, credentials).Result;
+
+            if (response != null)
+            {
+                var raw = response.Content.ReadAsStringAsync().Result;
+                ExtractOutput(response, raw);
+
+            }
+        }
+
+        private void ExtractOutput(HttpResponseMessage? response, string raw)
+        {
+            var output = new BasicAwsSigV4WebResponse
+            {
+                RawContent = raw,
+                Content = raw,
+                StatusCode = (int)response.StatusCode,
+                StatusCodeDescription = response.StatusCode.ToString(),
+                Headers = response.Headers.ToDictionary(x => x.Key, x => string.Join(", ", x.Value)),
+                RawContentLength = raw.Length
+            };
+
+            WriteObject(output);
         }
     }
 }
