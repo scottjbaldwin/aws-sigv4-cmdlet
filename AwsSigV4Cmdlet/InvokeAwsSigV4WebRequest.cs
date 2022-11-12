@@ -33,6 +33,9 @@ namespace AwsSigV4Cmdlet
         [Parameter()]
         public string Service { get; set; }
 
+        [Parameter()]
+        public string ContentType { get; set; }
+
         private HttpClient? _client;
 
         protected override void BeginProcessing()
@@ -50,7 +53,36 @@ namespace AwsSigV4Cmdlet
                 HandleGet(credentials);
                 return;
             }
+            if (Method == "POST")
+            {
+                HandlePost(credentials);
+                return;
+            }
             throw new NotImplementedException("Give me half a chance");
+
+        }
+
+        private void HandlePost(ImmutableCredentials credentials)
+        {
+            HttpContent content = null;
+            switch (ContentType)
+            {
+                case "application/json":
+                case "text/html":
+                case "text/plain":
+                    content = new StringContent(Body, System.Text.Encoding.UTF8, ContentType);
+                    break;
+                default:
+                    throw new NotImplementedException(ContentType);
+            }
+
+            var response = _client?.PostAsync(Uri, content, Region, Service, credentials).Result;
+
+            if (response != null)
+            {
+                var raw = response.Content.ReadAsStringAsync().Result;
+                ExtractOutput(response, raw);
+            }
 
         }
 
