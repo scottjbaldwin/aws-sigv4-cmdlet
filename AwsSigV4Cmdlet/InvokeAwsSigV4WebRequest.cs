@@ -11,13 +11,13 @@ namespace AwsSigV4Cmdlet
         [Parameter(Mandatory = true, Position = 0)]
         public Uri Uri { get; set; }
 
-        [Parameter(ValueFromPipeline = true)] 
-        public string? Body { get; set; }
+        [Parameter(ValueFromPipeline = true)]
+        public string? Body { get; set; } = string.Empty;
 
-        [Parameter()]
+        [Parameter(Mandatory = true)]
         public string AccessKey { get; set; }
 
-        [Parameter()]
+        [Parameter(Mandatory = true)]
         public string SecretKey { get; set; }
 
         [Parameter()]
@@ -25,16 +25,16 @@ namespace AwsSigV4Cmdlet
 
         [Parameter()]
         [ValidateSet("GET", "POST", "PUT", "DELETE")]
-        public string Method { get; set; }
+        public string Method { get; set; } = "GET";
 
         [Parameter()]
         public string Region { get; set; }
 
         [Parameter()]
-        public string Service { get; set; }
+        public string Service { get; set; } = "execute-api";
 
         [Parameter()]
-        public string? ContentType { get; set; }
+        public string ContentType { get; set; } = "application/json";
 
         private HttpClient? _client;
 
