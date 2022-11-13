@@ -114,7 +114,6 @@ namespace AwsSigV4Cmdlet
                 var raw = response.Content.ReadAsStringAsync().Result;
                 ExtractOutput(response, raw);
             }
-
         }
 
         private void HandleGet(ImmutableCredentials credentials)
@@ -125,7 +124,6 @@ namespace AwsSigV4Cmdlet
             {
                 var raw = response.Content.ReadAsStringAsync().Result;
                 ExtractOutput(response, raw);
-
             }
         }
 
