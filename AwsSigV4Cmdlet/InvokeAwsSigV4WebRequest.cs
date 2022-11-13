@@ -56,6 +56,9 @@ namespace AwsSigV4Cmdlet
                 case "POST":
                     HandlePost(credentials);
                     break;
+                case "PUT":
+                    HandlePut(credentials);
+                    break;
                 default:
                     throw new NotImplementedException("Give me half a chance");
             }
@@ -65,6 +68,29 @@ namespace AwsSigV4Cmdlet
         {
             _client?.Dispose();
             base.EndProcessing();
+        }
+
+        private void HandlePut(ImmutableCredentials credentials)
+        {
+            HttpContent? content;
+            switch (ContentType)
+            {
+                case "application/json":
+                case "text/html":
+                case "text/plain":
+                    content = new StringContent(Body ?? string.Empty, System.Text.Encoding.UTF8, ContentType);
+                    break;
+                default:
+                    throw new NotImplementedException(ContentType);
+            }
+
+            var response = _client?.PutAsync(Uri, content, Region, Service, credentials).Result;
+
+            if (response != null)
+            {
+                var raw = response.Content.ReadAsStringAsync().Result;
+                ExtractOutput(response, raw);
+            }
         }
 
         private void HandlePost(ImmutableCredentials credentials)
