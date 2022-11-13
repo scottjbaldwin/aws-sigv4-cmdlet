@@ -48,17 +48,17 @@ namespace AwsSigV4Cmdlet
         {
             var credentials = new ImmutableCredentials(AccessKey, SecretKey, Token);
             
-            if (Method == "GET")
+            switch (Method)
             {
-                HandleGet(credentials);
-                return;
+                case "GET":
+                    HandleGet(credentials);
+                    break;
+                case "POST":
+                    HandlePost(credentials);
+                    break;
+                default:
+                    throw new NotImplementedException("Give me half a chance");
             }
-            if (Method == "POST")
-            {
-                HandlePost(credentials);
-                return;
-            }
-            throw new NotImplementedException("Give me half a chance");
         }
 
         protected override void EndProcessing()
