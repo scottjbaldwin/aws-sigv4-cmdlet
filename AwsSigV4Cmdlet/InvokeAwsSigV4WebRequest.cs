@@ -27,7 +27,7 @@ namespace AwsSigV4Cmdlet
         [ValidateSet("GET", "POST", "PUT", "DELETE")]
         public string Method { get; set; } = "GET";
 
-        [Parameter()]
+        [Parameter(Mandatory = true)]
         public string Region { get; set; }
 
         [Parameter()]
