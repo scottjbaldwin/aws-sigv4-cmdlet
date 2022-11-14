@@ -7,6 +7,14 @@ namespace AwsSigV4Cmdlet
     /// <summary>
     /// <para type="synopsis">Web Requests using AWS SigV4.</para>
     /// <para type="description">Makes a signed web request to a uri with AWS Signature Version 4 signing process for APIs that use AWS IAM authentication.</para> 
+    /// <example>
+    ///     <code>Invoke-AwsSigV4WebRequest -Uri https://foo.com/api/values -AccessKey AKIAXXXXXXXXXXXX -SecretKey XXXXXXXXXXXXXXXXXXXXXXXXXXXXX -Region us-east-1</code>
+    ///     <para>Make a GET request on the foo.com api to get the values</para>
+    /// </example>
+    /// <example>
+    ///     <code>Get-Content .\requestbody.json | Invoke-AwsSigV4WebRequest -Uri https://foo.com/api/values -Method POST -AccessKey AKIAXXXXXXXXXXXX -SecretKey XXXXXXXXXXXXXXXXXXXXXXXXXXXXX -Region us-east-1</code>
+    ///     <para>Uses the contents of the file requestbody.json as the Body of the POST request to the foo.com api</para>
+    /// </example>
     /// </summary>
     [Cmdlet(VerbsLifecycle.Invoke, "AwsSigV4WebRequest")]
     [OutputType(typeof(BasicAwsSigV4WebResponse))]
