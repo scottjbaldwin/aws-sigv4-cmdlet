@@ -4,35 +4,66 @@ using System.Net.Http.Headers;
 
 namespace AwsSigV4Cmdlet
 {
+    /// <summary>
+    /// <para type="synopsis">Web Requests using AWS SigV4.</para>
+    /// <para type="description">Makes a signed web request to a uri with AWS Signature Version 4 signing process for APIs that use AWS IAM authentication.</para> 
+    /// </summary>
     [Cmdlet(VerbsLifecycle.Invoke, "AwsSigV4WebRequest")]
     [OutputType(typeof(BasicAwsSigV4WebResponse))]
     public class InvokeAwsSigV4WebRequest : Cmdlet
     {
+        /// <summary>
+        /// <para type="description">The Uri to make the signed request to.</para>
+        /// </summary>
         [Parameter(Mandatory = true, Position = 0)]
         public Uri Uri { get; set; }
 
+        /// <summary>
+        /// <para type="description">The Body of the request.</para>
+        /// </summary>
         [Parameter(ValueFromPipeline = true)]
         public string? Body { get; set; } = string.Empty;
 
+        /// <summary>
+        /// <para type="description">The access key of the IAM user.</para>
+        /// </summary>
         [Parameter(Mandatory = true)]
         public string AccessKey { get; set; }
 
+        /// <summary>
+        /// <para type="description">The secret key of the IAM user.</para>
+        /// </summary>
         [Parameter(Mandatory = true)]
         public string SecretKey { get; set; }
 
+        /// <summary>
+        /// <para type="description">The session token when using temproary credentials.</para>
+        /// </summary>
         [Parameter()]
         public string? Token { get; set; }
 
+        /// <summary>
+        /// <para type="description">The HTTP method to invoke.</para>
+        /// </summary>
         [Parameter()]
         [ValidateSet("GET", "POST", "PUT", "DELETE")]
         public string Method { get; set; } = "GET";
 
+        /// <summary>
+        /// <para type="description">The AWS region the API is hosted in.</para>
+        /// </summary>
         [Parameter(Mandatory = true)]
         public string Region { get; set; }
 
+        /// <summary>
+        /// <para type="description">The AWS service you are invoking (e.g. "execute-api").</para>
+        /// </summary>
         [Parameter()]
         public string Service { get; set; } = "execute-api";
 
+        /// <summary>
+        /// <para type="description">The http content type</para>
+        /// </summary>
         [Parameter()]
         public string ContentType { get; set; } = "application/json";
 
