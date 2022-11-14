@@ -59,6 +59,9 @@ namespace AwsSigV4Cmdlet
                 case "PUT":
                     HandlePut(credentials);
                     break;
+                case "DELETE":
+                    HandleDelete(credentials);
+                    break;
                 default:
                     throw new NotImplementedException("Give me half a chance");
             }
@@ -119,6 +122,17 @@ namespace AwsSigV4Cmdlet
         private void HandleGet(ImmutableCredentials credentials)
         {
             var response = _client?.GetAsync(Uri, HttpCompletionOption.ResponseContentRead, Region, Service, credentials).Result;
+
+            if (response != null)
+            {
+                var raw = response.Content.ReadAsStringAsync().Result;
+                ExtractOutput(response, raw);
+            }
+        }
+
+        private void HandleDelete(ImmutableCredentials credentials)
+        {
+            var response = _client?.DeleteAsync(Uri, Region, Service, credentials).Result;
 
             if (response != null)
             {
