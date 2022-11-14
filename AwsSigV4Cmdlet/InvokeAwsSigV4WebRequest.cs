@@ -75,18 +75,11 @@ namespace AwsSigV4Cmdlet
 
         private void HandlePut(ImmutableCredentials credentials)
         {
-            HttpContent? content;
-            switch (ContentType)
+            HttpContent? content = ContentType switch
             {
-                case "application/json":
-                case "text/html":
-                case "text/plain":
-                    content = new StringContent(Body ?? string.Empty, System.Text.Encoding.UTF8, ContentType);
-                    break;
-                default:
-                    throw new NotImplementedException(ContentType);
-            }
-
+                "application/json" or "text/html" or "text/plain" => new StringContent(Body ?? string.Empty, System.Text.Encoding.UTF8, ContentType),
+                _ => throw new NotImplementedException(ContentType),
+            };
             var response = _client?.PutAsync(Uri, content, Region, Service, credentials).Result;
 
             if (response != null)
@@ -98,18 +91,11 @@ namespace AwsSigV4Cmdlet
 
         private void HandlePost(ImmutableCredentials credentials)
         {
-            HttpContent? content;
-            switch (ContentType)
+            HttpContent? content = ContentType switch
             {
-                case "application/json":
-                case "text/html":
-                case "text/plain":
-                    content = new StringContent(Body ?? string.Empty, System.Text.Encoding.UTF8, ContentType);
-                    break;
-                default:
-                    throw new NotImplementedException(ContentType);
-            }
-
+                "application/json" or "text/html" or "text/plain" => new StringContent(Body ?? string.Empty, System.Text.Encoding.UTF8, ContentType),
+                _ => throw new NotImplementedException(ContentType),
+            };
             var response = _client?.PostAsync(Uri, content, Region, Service, credentials).Result;
 
             if (response != null)
