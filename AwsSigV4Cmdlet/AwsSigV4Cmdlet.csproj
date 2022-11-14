@@ -7,6 +7,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <AssemblyName>AwsSigV4</AssemblyName>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Title>AwsSigV4 Powershell Module</Title>
   </PropertyGroup>
 
   <ItemGroup>

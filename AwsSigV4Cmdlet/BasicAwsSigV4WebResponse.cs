@@ -28,18 +28,13 @@ namespace AwsSigV4Cmdlet
         public string Content { get; set; } = string.Empty;
 
         /// <summary>
-        /// <para type="description">The raw content returned from the request.</para>
-        /// </summary>
-        public string RawContent { get; set; } = string.Empty;
-
-        /// <summary>
         /// <para type="description">The response headers returned by the request.</para>
         /// </summary>
         public Dictionary<string, string>? Headers { get; set; }
 
         /// <summary>
-        /// <para type="description">The Raw content length.</para>
+        /// <para type="description">The content length.</para>
         /// </summary>
-        public int RawContentLength { get; set; }
+        public int ContentLength { get; set; }
     }
 }

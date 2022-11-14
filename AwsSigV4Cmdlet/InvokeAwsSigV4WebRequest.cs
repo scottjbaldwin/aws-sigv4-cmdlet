@@ -115,8 +115,7 @@ namespace AwsSigV4Cmdlet
 
             if (response != null)
             {
-                var raw = response.Content.ReadAsStringAsync().Result;
-                ExtractOutput(response, raw);
+                ExtractOutput(response);
             }
         }
 
@@ -131,8 +130,7 @@ namespace AwsSigV4Cmdlet
 
             if (response != null)
             {
-                var raw = response.Content.ReadAsStringAsync().Result;
-                ExtractOutput(response, raw);
+                ExtractOutput(response);
             }
         }
 
@@ -142,8 +140,7 @@ namespace AwsSigV4Cmdlet
 
             if (response != null)
             {
-                var raw = response.Content.ReadAsStringAsync().Result;
-                ExtractOutput(response, raw);
+                ExtractOutput(response);
             }
         }
 
@@ -153,21 +150,20 @@ namespace AwsSigV4Cmdlet
 
             if (response != null)
             {
-                var raw = response.Content.ReadAsStringAsync().Result;
-                ExtractOutput(response, raw);
+                ExtractOutput(response);
             }
         }
 
-        private void ExtractOutput(HttpResponseMessage? response, string raw)
+        private void ExtractOutput(HttpResponseMessage response)
         {
+            var content = response.Content.ReadAsStringAsync().Result;
             var output = new BasicAwsSigV4WebResponse
             {
-                RawContent = raw,
-                Content = raw,
+                Content = content,
                 StatusCode = (int)response.StatusCode,
                 StatusCodeDescription = response.StatusCode.ToString(),
                 Headers = response.Headers.ToDictionary(x => x.Key, x => string.Join(", ", x.Value)),
-                RawContentLength = raw.Length
+                ContentLength = content.Length
             };
 
             WriteObject(output);
