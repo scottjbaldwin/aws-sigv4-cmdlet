@@ -43,9 +43,9 @@ very much a work in progress.
 
 ### Road Map
 
-* Documentation for `Get-Help` commandlet
+* Documentation for `Get-Help` commandlet (currently in progress)
 * Automation Tests
-* Add to Package Manager
+* Add to Powershell Gallery
 * Build process
 * Add other Verbs
 * Add non-text based content types
