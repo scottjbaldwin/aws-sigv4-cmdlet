@@ -4,9 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <AssemblyName>AwsSigV4</AssemblyName>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Title>AwsSigV4 Powershell Module</Title>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
@@ -15,5 +13,9 @@
     <PackageReference Include="AwsSignatureVersion4" Version="4.0.0" />
     <PackageReference Include="System.Management.Automation" Version="7.2.5" />
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Message Text="Creating module help documentation..." Importance="high" />
+    <Exec Command="pwsh -File $(ProjectDir)docs\GenerateHelp.ps1 -OutputPath $(TargetDir)" />
+  </Target>
 
 </Project>
