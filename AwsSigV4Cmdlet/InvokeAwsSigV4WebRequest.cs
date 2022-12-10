@@ -1,5 +1,8 @@
 ﻿using Amazon.Runtime;
+using System;
+using System.Linq;
 using System.Management.Automation;
+using System.Net.Http;
 using System.Net.Http.Headers;
 
 namespace AwsSigV4Cmdlet
@@ -30,7 +33,7 @@ namespace AwsSigV4Cmdlet
         /// <para type="description">The Body of the request.</para>
         /// </summary>
         [Parameter(ValueFromPipeline = true)]
-        public string? Body { get; set; } = string.Empty;
+        public string Body { get; set; } = string.Empty;
 
         /// <summary>
         /// <para type="description">The access key of the IAM user.</para>
@@ -48,7 +51,7 @@ namespace AwsSigV4Cmdlet
         /// <para type="description">The session token when using temproary credentials.</para>
         /// </summary>
         [Parameter()]
-        public string? Token { get; set; }
+        public string Token { get; set; }
 
         /// <summary>
         /// <para type="description">The HTTP method to invoke.</para>
@@ -75,7 +78,7 @@ namespace AwsSigV4Cmdlet
         [Parameter()]
         public string ContentType { get; set; } = "application/json";
 
-        private HttpClient? _client;
+        private HttpClient _client;
 
         protected override void BeginProcessing()
         {
@@ -114,31 +117,38 @@ namespace AwsSigV4Cmdlet
 
         private void HandlePut(ImmutableCredentials credentials)
         {
-            HttpContent? content = ContentType switch
-            {
-                "application/json" or "text/html" or "text/plain" => new StringContent(Body ?? string.Empty, System.Text.Encoding.UTF8, ContentType),
-                _ => throw new NotImplementedException(ContentType),
-            };
-            var response = _client?.PutAsync(Uri, content, Region, Service, credentials).Result;
 
-            if (response != null)
+            if (ContentType == "application/json" || ContentType == "text/html" ||  ContentType == "text/plain")
             {
-                ExtractOutput(response);
+                var content = new StringContent(Body ?? string.Empty, System.Text.Encoding.UTF8, ContentType);
+                var response = _client?.PutAsync(Uri, content, Region, Service, credentials).Result;
+
+                if (response != null)
+                {
+                    ExtractOutput(response);
+                }
+            }
+            else 
+            {
+                throw new NotImplementedException(ContentType);
             }
         }
 
         private void HandlePost(ImmutableCredentials credentials)
         {
-            HttpContent? content = ContentType switch
+            if (ContentType == "application/json" || ContentType == "text/html" || ContentType == "text/plain")
             {
-                "application/json" or "text/html" or "text/plain" => new StringContent(Body ?? string.Empty, System.Text.Encoding.UTF8, ContentType),
-                _ => throw new NotImplementedException(ContentType),
-            };
-            var response = _client?.PostAsync(Uri, content, Region, Service, credentials).Result;
+                var content = new StringContent(Body ?? string.Empty, System.Text.Encoding.UTF8, ContentType);
+                var response = _client?.PostAsync(Uri, content, Region, Service, credentials).Result;
 
-            if (response != null)
+                if (response != null)
+                {
+                    ExtractOutput(response);
+                }
+            }
+            else 
             {
-                ExtractOutput(response);
+                throw new NotImplementedException(ContentType);
             }
         }
 

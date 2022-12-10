@@ -30,7 +30,7 @@ namespace AwsSigV4Cmdlet
         /// <summary>
         /// <para type="description">The response headers returned by the request.</para>
         /// </summary>
-        public Dictionary<string, string>? Headers { get; set; }
+        public Dictionary<string, string> Headers { get; set; }
 
         /// <summary>
         /// <para type="description">The content length.</para>
