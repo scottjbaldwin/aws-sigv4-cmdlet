@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>AwsSigV4</AssemblyName>
     <Title>AwsSigV4 Powershell Module</Title>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -11,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="AwsSignatureVersion4" Version="4.0.0" />
-    <PackageReference Include="System.Management.Automation" Version="7.2.5" />
+    <PackageReference Include="PowershellStandard.Library" Version="5.1.1" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Message Text="Creating module help documentation..." Importance="high" />
