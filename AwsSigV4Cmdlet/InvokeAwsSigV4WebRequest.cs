@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Management.Automation;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
@@ -77,6 +78,9 @@ namespace AwsSigV4Cmdlet
         /// </summary>
         [Parameter()]
         public string ContentType { get; set; } = "application/json";
+
+        [Parameter()]
+        public SwitchParameter SkipHttpErrorCheck { get; set; }
 
         private HttpClient _client;
 
@@ -184,7 +188,16 @@ namespace AwsSigV4Cmdlet
                 ContentLength = content.Length
             };
 
-            WriteObject(output);
+            if (output.StatusCode < (int)HttpStatusCode.BadRequest || SkipHttpErrorCheck.IsPresent)
+            {
+                WriteObject(output);
+            }
+            else
+            {
+                var ex = new HttpRequestException($"{output.StatusCode} - {output.StatusCodeDescription}: {output.Content}");
+                var errorRecord = new ErrorRecord(ex, output.StatusCode.ToString(), ErrorCategory.ProtocolError, output.Content);
+                WriteError(errorRecord);
+            }
         }
     }
 }
