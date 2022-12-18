@@ -41,6 +41,16 @@ but hopefully as this project progresses, it will feel more and more like a natu
 So far I have very quickly (and roughly) implemented only the simplest possible use cases that I needed. This is
 very much a work in progress.
 
+## Installation
+
+Currently the only way to install this module is to pull down the source code, build it yourself, and then use the powershell command:
+
+```pwsh
+    Import-Module AwsSigV4.dll
+```
+
+Some time in the not too distant future I hope to have this published to the Powershell Gallery for easier installation.
+
 ### Road Map
 
 * Documentation for `Get-Help` commandlet (currently in progress)
