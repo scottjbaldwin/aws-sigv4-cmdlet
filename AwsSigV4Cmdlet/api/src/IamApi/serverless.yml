@@ -26,6 +26,15 @@ Resources:
           Properties:
             Path: /
             Method: ANY
+
+  IamApiSigV4LogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${AspNetCoreFunction}"
+      RetentionInDays: 30
+
 Outputs:
   ApiURL:
     Description: API endpoint URL for Prod environment
