@@ -4,6 +4,32 @@ Description: An AWS Serverless Application that uses the ASP.NET Core framework 
 Parameters: {}
 Conditions: {}
 Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: 'sts:AssumeRole'
+            Principal:
+              Service: lambda.amazonaws.com
+
+  CloudWatchLogsPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: CloudwatchPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'logs:CreateLogStream'
+              - 'logs:PutLogEvents'
+            Resource: !Sub 'arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*'
+      Roles:
+        - !Ref LambdaRole
+    
   AspNetCoreFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -12,7 +38,7 @@ Resources:
       CodeUri: ""
       MemorySize: 256
       Timeout: 30
-      Role: null
+      Role: !GetAtt LambdaRole.Arn
       Policies:
       - AWSLambda_FullAccess
       Events:
