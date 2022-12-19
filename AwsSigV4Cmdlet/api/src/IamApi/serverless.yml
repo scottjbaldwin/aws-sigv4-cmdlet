@@ -36,7 +36,7 @@ Resources:
       Handler: IamApi::IamApi.LambdaEntryPoint::FunctionHandlerAsync
       Runtime: dotnet6
       CodeUri: ""
-      MemorySize: 256
+      MemorySize: 1042
       Timeout: 30
       Role: !GetAtt LambdaRole.Arn
       Policies:
