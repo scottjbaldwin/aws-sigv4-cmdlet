@@ -29,7 +29,15 @@ Resources:
             Resource: !Sub 'arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*'
       Roles:
         - !Ref LambdaRole
-    
+  
+  TestIamApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Auth:
+        DefaultAuthorizer: AWS_IAM
+        InvokeRole: NONE
+
   AspNetCoreFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -45,11 +53,13 @@ Resources:
         ProxyResource:
           Type: Api
           Properties:
+            RestApiId: !Ref TestIamApi
             Path: /{proxy+}
             Method: ANY
         RootResource:
           Type: Api
           Properties:
+            RestApiId: !Ref TestIamApi
             Path: /
             Method: ANY
 
