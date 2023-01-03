@@ -8,7 +8,9 @@
   "profile": "sbaldwin:dev",
   "region": "ap-southeast-2",
   "configuration": "Release",
+  "s3-bucket": "sbaldwin-dev",
   "s3-prefix": "IamApi/",
   "template": "serverless.yml",
-  "template-parameters": ""
+  "template-parameters": "",
+  "stack-name": "iamapi-sigv4"
 }
